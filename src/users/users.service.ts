@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dtos/createUserDto';
+import { UpdateUserDto } from './dtos/updateUserDto';
+import { DeleteUserDto } from './dtos/deleteUserDto';
+import { GetUserByIdDto } from './dtos/getUserByIdDto';
 
 @Injectable()
 export class UsersService {
@@ -19,27 +23,27 @@ export class UsersService {
         return this.users;
     }
 
-    getUserById(id: string) {
-        return this.users.find(user => user.id === parseInt(id, 10));
+    getUserById(dto: GetUserByIdDto) {
+        return this.users.find(user => user.id === dto.id);
     }
 
-    createUser(user: { name: string; email: string }) {
-        const newUser = { id: this.users.length + 1, ...user };
+    createUser(dto: CreateUserDto) {
+        const newUser = { id: this.users.length + 1, ...dto };
         this.users.push(newUser);
         return newUser;
     }
 
-    updateUser(id: string, user: { name?: string; email?: string }) {
-        const index = this.users.findIndex(u => u.id === parseInt(id, 10));
+    updateUser(dto: UpdateUserDto) {
+        const index = this.users.findIndex(u => u.id === dto.id);
         if (index !== -1) {
-            this.users[index] = { ...this.users[index], ...user };
+            this.users[index] = { ...this.users[index], ...dto };
             return this.users[index];
         }
         return null;
     }
 
-    deleteUser(id: string) {
-        const index = this.users.findIndex(user => user.id === parseInt(id, 10));
+    deleteUser(dto: DeleteUserDto) {
+        const index = this.users.findIndex(user => user.id === dto.id);
         if (index !== -1) {
             const deletedUser = this.users.splice(index, 1);
             return deletedUser[0];
